@@ -50,3 +50,18 @@ export function putMethod(url,data = {}){
             })
     })
 }
+
+//delete请求封装
+export function deleteMethod(url, params) {
+    return new Promise((resolve, reject) => {
+        axios.delete(url, params)
+            .then(res => {
+                resolve(res.data);
+            })
+            .catch(err => {
+                reject(err.data)
+            })
+    });
+}
+
+export default axios

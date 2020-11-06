@@ -26,6 +26,7 @@
 
 <script>
 import {postMethod} from "@/HttpRequest/baseRequest";
+import axios from '@/HttpRequest/baseRequest'
 
 export default {
   name: 'LoginBox',
@@ -56,6 +57,9 @@ export default {
           this.setUserStore(info);
           //保存用户信息到浏览器本地
           this.setUserInfo(this.userName, this.psw, res.data.data.token);
+
+          //更新token
+          axios.defaults.headers['authorization'] = res.data.data.token;
           //登录 返回首页
           this.$router.push('/');
         } else {

@@ -39,10 +39,12 @@
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button type="primary" icon="el-icon-edit" circle @click="toggleDialog(scope.row)"></el-button>
-          <el-button type="danger" icon="el-icon-delete" circle></el-button>
+          <el-button type="danger" icon="el-icon-delete" circle @click="toggleDeleteDialog(scope.row)"></el-button>
           <!--修改用户资料区域-->
           <ChangeUserInfo :dialog-visible="showDialog" @changeUserInfo="change(defaultInfo)" @close="close"
                           :user-info="defaultInfo"></ChangeUserInfo>
+          <DeleteDialog :show-delete="showDeleteDialog" @close="closeDeleteDialog"
+                        @determine="determine(deleteUser)"></DeleteDialog>
         </template>
       </el-table-column>
     </el-table>
@@ -61,15 +63,17 @@
 </template>
 
 <script>
-import {getMethod, postMethod, putMethod} from "@/HttpRequest/baseRequest";
+import {getMethod, postMethod, putMethod, deleteMethod} from "@/HttpRequest/baseRequest";
 import AddUserArea from "@/components/center/AddUserArea";
 import ChangeUserInfo from "@/components/center/ChangeUserInfo";
+import DeleteDialog from "@/components/center/DeleteDialog";
 
 export default {
   name: "UserList",
   components: {
     AddUserArea,
-    ChangeUserInfo
+    ChangeUserInfo,
+    DeleteDialog
   },
   data() {
     return {
@@ -82,7 +86,9 @@ export default {
       },
       total: 0,
       showDialog: false,
-      defaultInfo: {}
+      showDeleteDialog: false,
+      defaultInfo: {},
+      deleteUser:{}
     }
   },
   mounted() {
@@ -139,7 +145,6 @@ export default {
       }).catch(err => {
         console.log(err);
       })
-      console.log(query.username);
     },
     // 分页点击事件
     handleSizeChange(val) {
@@ -164,10 +169,10 @@ export default {
         'email': user.email,
         'mobile': user.mobile
       }).then(res => {
-        if(res.meta.status === 200){
+        if (res.meta.status === 200) {
           alert('更新成功');
           this.getUsers();
-        }else {
+        } else {
           alert('更新失败');
           this.getUsers()
         }
@@ -178,7 +183,28 @@ export default {
       this.showDialog = !this.showDialog;
     },
 
-     //删除单个用户
+    //删除单个用户
+    closeDeleteDialog() {
+      this.showDeleteDialog = false;
+    },
+    toggleDeleteDialog(deleteToggle) {
+      this.deleteUser = deleteToggle;
+      this.showDeleteDialog = !this.showDeleteDialog;
+    },
+    determine(deleteUser) {
+      console.log(deleteUser);
+      deleteMethod(`users/${deleteUser.id}`).then(res => {
+        if (res.meta.status === 200) {
+          alert('删除成功');
+          this.getUsers();
+        } else {
+          alert('删除失败!')
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+      this.showDeleteDialog = false;
+    }
   },
 
   //格式化时间
