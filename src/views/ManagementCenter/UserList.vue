@@ -149,7 +149,7 @@ export default {
     // 分页点击事件
     handleSizeChange(val) {
       this.queryParam.pageSize = val;
-      this.getUsers();
+      this.getUsers()
     },
     handleCurrentChange(val) {
       this.queryParam.pageNum = val;

@@ -12,6 +12,7 @@
 
 <script>
 import MsgBox from "@/components/profile/MsgBox";
+import axios from '@/HttpRequest/baseRequest'
 
 export default {
   name: 'UserInfo',
@@ -34,6 +35,7 @@ export default {
       localStorage.removeItem('userName');
       localStorage.removeItem('password');
       localStorage.removeItem('token');
+      axios.defaults.headers['authorization'] = '';
       //返回首页
       this.$router.push('/');
       alert('退出成功');
