@@ -1,5 +1,7 @@
 <template>
-$END$
+<div class="role_list">
+  <h3>角色列表</h3>
+</div>
 </template>
 
 <script>
